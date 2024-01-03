@@ -1,5 +1,7 @@
 import pandas as pd 
 
+from joblib import dump
+
 
 
 
@@ -8,7 +10,7 @@ import pandas as pd
 
 #Loading the dataset
 
-df = pd.read_csv( 'sentiment_analysis.csv', delimiter=',')
+df = pd.read_csv( r'C:\Users\HOME\twitty_gate\sentiments_classifification\sentiment_analysis.csv', delimiter=',')
 
 
 #print(df.head())
@@ -142,20 +144,9 @@ num_epochs = 30
 # Train the model
 history = model.fit(training_padded, training_labels, epochs=num_epochs, validation_data=(testing_padded, testing_labels), verbose=2)
 
-model.save('my_model.h5')
+dump(model, 'trained_model.joblib')
+dump(tokenizer, 'tokenizer.joblib')
 
-tweet = 'fuck you'
-
-
-def predict_polarity(tweet):
-    loaded_model = tf.keras.models.load_model('my_model.h5')
-    token_list = tokenizer.texts_to_sequences([tweet])[0]
-    # Pad the sequences
-    token_list = pad_sequences([token_list], maxlen=16, padding=padding_type)
-    # Get the probabilities of predicting a word
-    predicted = model.predict(token_list, verbose=0)
-
-print(predict_polarity(tweet))
 
 
 
@@ -174,5 +165,7 @@ def plot_graphs(history, string):
 # Plot the accuracy and loss
 plot_graphs(history, "accuracy")
 plot_graphs(history, "loss")
+
+
 
 
