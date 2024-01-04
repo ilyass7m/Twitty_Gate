@@ -153,9 +153,9 @@ app.layout = html.Div([
     Input('submit-val', 'n_clicks'),
     [State('username', 'value')]
 )
-def display_user_rating(n_clicks, username):
+def display_user_rating(n_clicks, username , api=api):
     if n_clicks > 0:
-        rating = rate(username)  # Calculate user rating using the 'rate' function
+        rating = rate(username , api)  # Calculate user rating using the 'rate' function
         return f"User Rating: {rating:.2f}%"
 
 # Callback pour récupérer les tweets de l'utilisateur et les stocker dans une variable globale
