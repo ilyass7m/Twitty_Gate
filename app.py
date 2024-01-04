@@ -1,7 +1,7 @@
 import tweepy
 import pandas as pd
 import plotly.express as px
-from dash import Dash, html, dcc, callback, Input, Output
+from dash import Dash, html, dcc, callback, Input, Output , State
 from wordcloud import WordCloud
 # tensorflow.keras.models import load_model  # Si vous utilisez Keras pour le modèle de prédiction de sentiments
 #from tweets_analysis.wordcloud import wordcloud_
@@ -9,6 +9,7 @@ from sentiments_classifification.lexical import *
 from twitter_setup.collect_tweets import collect_comments , get_tweets
 from twitter_setup.twitterConnectionSetup import twitter_setup
 from sentiments_classifification.predict_model import predict_polarity
+from SVM.predict_feed import rate
 #from insultes.compteur_insultes import Compteur , PatternDeFichierTexte
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
@@ -84,7 +85,7 @@ taux = 0
 
 
 
-# Charger le modèle de prédiction de sentiments
+
 
 #model = load_model(r'C:\Users\HOME\twitty_gate\sentiments_classifification\trained_model.joblib')
 
@@ -133,10 +134,50 @@ app.layout = html.Div([
         html.Button('Analyze', id='submit-val', n_clicks=0, style=button_styles)
     ], style=div_styles),
 
-    html.Div(id='output-wordcloud', style=output_wordcloud_styles),
-    dcc.Graph(id='output-sentiment', style=output_sentiment_styles),
-    html.Div(id='output-amability', style=output_amability_styles)
+    html.Div(id='store-tweets', style={'display': 'none'}),  # Div to store tweets (hidden)
+
+    html.Div([
+        html.Div([
+            html.Img(id='profile-image', src=''),  # Profile image display
+            html.Div(id='user-rating', style={'textAlign': 'center', 'fontSize': '20px'})  # User rating display
+        ], style={'display': 'flex', 'alignItems': 'center', 'justifyContent': 'center'}),
+        html.Div(id='output-wordcloud', style=output_wordcloud_styles),  # Wordcloud display
+    ]),
+
+    dcc.Graph(id='output-sentiment', style=output_sentiment_styles),  # Sentiment histogram
+    html.Div(id='output-amability', style=output_amability_styles),  # Amability index display
 ])
+# Callback for updating the user rating display
+@app.callback(
+    Output('user-rating', 'children'),
+    Input('submit-val', 'n_clicks'),
+    [State('username', 'value')]
+)
+def display_user_rating(n_clicks, username):
+    if n_clicks > 0:
+        rating = rate(username)  # Calculate user rating using the 'rate' function
+        return f"User Rating: {rating:.2f}%"
+
+# Callback pour récupérer les tweets de l'utilisateur et les stocker dans une variable globale
+@app.callback(
+    Output('store-tweets', 'children'),
+    Input('submit-val', 'n_clicks'),
+    State('username', 'value'),
+    State('num_tweets', 'value')
+)
+def store_user_tweets(n_clicks, username, num_tweets):
+    global tweets  # Utilisez la variable globale 'tweets'
+    if n_clicks > 0:
+        tweets = get_tweets(username, num_tweets)
+        return ''
+    return None
+
+
+
+
+
+
+
 # Callback pour générer le WordCloud
 @app.callback(
     Output('output-wordcloud', 'children'),

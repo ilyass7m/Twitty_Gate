@@ -108,3 +108,15 @@ labels_predicted = clf.predict(data_test)
 # Evaluation of the prediction
 print (classification_report(labels_test, labels_predicted))
 print ("The accuracy score is {:.2%}".format(accuracy_score(labels_test, labels_predicted)))
+
+import joblib
+
+# Assuming 'tfidf_vectorizer', 'tfidf_matrix', and 'clf' are your objects
+# Save TfidfVectorizer, tfidf_matrix, and clf to a single file (e.g., 'model_data.joblib')
+model_data = {
+    'tfidf_vectorizer': m,
+    'tfidf_matrix': tfidf_matrix,
+    'clf': clf
+}
+joblib.dump(model_data, 'model_data.joblib')
+

@@ -3,10 +3,10 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 import numpy as np
 from joblib import load
 
-tokenizer = load('tokenizer.joblib')
+tokenizer = load(r'C:\Users\HOME\twitty_gate\sentiments_classifification\tokenizer.joblib')
 
 def predict_polarity(tweet):
-    loaded_model = load('trained_model.joblib')
+    loaded_model = load(r'C:\Users\HOME\twitty_gate\sentiments_classifification\trained_model.joblib')
     token_list = tokenizer.texts_to_sequences([tweet])[0]
     # Pad the sequences
     token_list = pad_sequences([token_list], maxlen=16, padding='post')
