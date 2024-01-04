@@ -9,8 +9,8 @@ Vous pouvez récupérer l'image du projet à partir de Dockerhub
 
 ```bash
 
-docker pull username/your_application_image:latest
-docker run -p 8080:80 username/your_application_image:latest
+docker pull ilyass7m/twitty_gate
+docker run -p 8080:80 ilyass7m/twitty_gate:latest
 
 ```
 
