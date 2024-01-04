@@ -6,7 +6,7 @@ dash
 nltk
 scipy
 tensorflow
-sklearn
+scikit-learn
 string
 joblib
 matplotlib
