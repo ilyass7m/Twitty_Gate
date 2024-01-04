@@ -14,6 +14,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import roc_curve, auc
+from scipy.sparse import csr_matrix , save_npz
 
 
 
@@ -108,15 +109,26 @@ labels_predicted = clf.predict(data_test)
 # Evaluation of the prediction
 print (classification_report(labels_test, labels_predicted))
 print ("The accuracy score is {:.2%}".format(accuracy_score(labels_test, labels_predicted)))
+print(tfidf_matrix)
 
 import joblib
 
 # Assuming 'tfidf_vectorizer', 'tfidf_matrix', and 'clf' are your objects
 # Save TfidfVectorizer, tfidf_matrix, and clf to a single file (e.g., 'model_data.joblib')
-model_data = {
+'''model_data = {
     'tfidf_vectorizer': m,
     'tfidf_matrix': tfidf_matrix,
     'clf': clf
 }
-joblib.dump(model_data, 'model_data.joblib')
+joblib.dump(model_data, 'model_data.joblib')'''
+
+tfidf_sparse = csr_matrix(tfidf_matrix)
+
+save_npz('tfidf_sparse.npz', tfidf_sparse)
+
+#np.save('tfid_matrix.npy' , tfidf_matrix)
+joblib.dump(m , 'tfid_vectoriser.joblib' )
+joblib.dump(clf , 'clf.joblib' )
+
+
 

@@ -1,23 +1,25 @@
-from twitter_setup.twitterConnectionSetup import  twitter_setup
-from twitter_setup.collect_tweets import get_tweets , collect_comments
+
 import string
 from nltk.stem import PorterStemmer
 from sklearn.feature_extraction.text import TfidfVectorizer
 import numpy as np
 import tweepy
+from scipy.sparse import load_npz , csr_matrix
 
-api = twitter_setup()
+#api = twitter_setup()
 
 import joblib
 import numpy as np
 
 # Load TfidfVectorizer, tfidf_matrix, and clf from the saved file
-loaded_model_data = joblib.load(r'C:\Users\HOME\twitty_gate\SVM\model_data.joblib')
+#loaded_model_data = joblib.load(r'C:\Users\HOME\twitty_gate\SVM\model_data.joblib')
 
 # Accessing loaded objects from the dictionary
-loaded_tfidf_vectorizer = loaded_model_data['tfidf_vectorizer']
-loaded_tfidf_matrix = loaded_model_data['tfidf_matrix']
-loaded_clf = loaded_model_data['clf']
+loaded_tfidf_vectorizer = joblib.load(r'C:\Users\HOME\twitty_gate\SVM\tfid_vectoriser.joblib')
+#loaded_tfidf_matrix = np.load(r'C:\Users\HOME\twitty_gate\SVM\tfid_matrix.npy')
+loaded_tfidf_sparse= load_npz(r'C:\Users\HOME\twitty_gate\SVM\tfidf_sparse.npz')
+loaded_tfidf_matrix = loaded_tfidf_sparse.toarray(loaded_tfidf_sparse)
+loaded_clf = joblib.load(r'C:\Users\HOME\twitty_gate\SVM\clf.joblib')
 
 stopwords = ['i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you', 'your', 'yours',
                  'yourself', 'yourselves', 'he', 'him', 'his', 'himself', 'she', 'her', 'hers',
@@ -60,7 +62,7 @@ def predict_svm(new_text):
     return predicted_polarity[0]
 
 
-def rate(username):
+def rate(username , api):
 
     positive_comments = 0
     total_comments = 0
